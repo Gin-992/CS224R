@@ -20,14 +20,16 @@
 Implementation of continuous-action imitation learning, evaluating Behavior Cloning (BC) and Dataset Aggregation (DAgger) to address distribution shift (covariate shift) in continuous control tasks.
 
 - **Methods**: Behavior Cloning (BC), DAgger
-- **Key Implementations**:
-  - `MLPPolicySL`: Gaussian policy network with learnable $`\log \sigma`$ for continuous action prediction.
-  - Supervised BC objective: $`\min_\theta \mathbb{E}_{(s, a^*) \sim \mathcal{D}} [-\log \pi_\theta(a^*|s)]`$.
-  - DAgger loop: Iteratively rolls out the learned policy, queries expert $`\pi^*`$ for ground-truth actions on visited states, and aggregates trajectories:
 
-    ```math
-    \mathcal{D}_k = \mathcal{D}_{k-1} \cup \{(s, \pi^*(s)) \mid s \sim d^{\pi_{\theta_{k-1}}}\}
-    ```
+**Key Implementations**
+
+- `MLPPolicySL`: Gaussian policy network with learnable $`\log \sigma`$ for continuous action prediction.
+- Supervised BC objective: $`\min_\theta \mathbb{E}_{(s, a^*) \sim \mathcal{D}} [-\log \pi_\theta(a^*|s)]`$.
+- DAgger loop: Iteratively rolls out the learned policy, queries expert $`\pi^*`$ for ground-truth actions on visited states, and aggregates trajectories:
+
+```math
+\mathcal{D}_k = \mathcal{D}_{k-1} \cup \{(s, \pi^*(s)) \mid s \sim d^{\pi_{\theta_{k-1}}}\}
+```
 
 - **Environments**: MuJoCo `Ant-v4`, `Hopper-v4`
 - **Experiments**: Evaluated policy performance across training steps and aggregation iterations against compounding errors.
@@ -51,21 +53,24 @@ Exploration of model-based trajectory optimization with MuJoCo MPC alongside sam
 Investigation of offline RL methods that learn policies from collected datasets, contrasting conservative penalties with in-support implicit value estimation.
 
 - **Methods**: Conservative Q-Learning (CQL), Implicit Q-Learning (IQL), Random Network Distillation (RND)
-- **Key Implementations**:
-  - **Conservative Q-Learning (CQL)**: Penalizes out-of-distribution (OOD) action values via a Log-Sum-Exp regularizer to construct a conservative lower bound:
 
-    ```math
-    \mathcal{L}_{\text{CQL}}(\theta) = \mathcal{L}_{\text{TD}}(\theta) + \alpha \cdot \mathbb{E}_{s \sim \mathcal{D}} \left[ \log \sum_{a} \exp(Q_\theta(s, a)) - \mathbb{E}_{a \sim \hat{\pi}_\beta}[Q_\theta(s, a)] \right]
-    ```
+**Key Implementations**
 
-  - **Implicit Q-Learning (IQL)**: Avoids evaluating unseen actions entirely by learning state values $`V(s)`$ via asymmetric expectile regression:
+- **Conservative Q-Learning (CQL)**: Penalizes out-of-distribution (OOD) action values via a Log-Sum-Exp regularizer to construct a conservative lower bound:
 
-    ```math
-    L_2^\tau(u) = |\tau - \mathbb{I}(u < 0)| u^2, \quad u = Q_{\hat{\theta}}(s, a) - V_\psi(s)
-    ```
+```math
+\mathcal{L}_{\text{CQL}}(\theta) = \mathcal{L}_{\text{TD}}(\theta) + \alpha \cdot \mathbb{E}_{s \sim \mathcal{D}} \left[ \log \sum_{a} \exp(Q_\theta(s, a)) - \mathbb{E}_{a \sim \hat{\pi}_\beta}[Q_\theta(s, a)] \right]
+```
 
-    followed by TD updates on $`Q(s, a)`$ and advantage-weighted policy extraction.
-  - **Exploration & Data Collection**: Offline dataset generation comparing undirected random exploration against curiosity-driven exploration via Random Network Distillation (RND).
+- **Implicit Q-Learning (IQL)**: Avoids evaluating unseen actions entirely by learning state values $`V(s)`$ via asymmetric expectile regression:
+
+```math
+L_2^\tau(u) = |\tau - \mathbb{I}(u < 0)| u^2, \quad u = Q_{\hat{\theta}}(s, a) - V_\psi(s)
+```
+
+followed by TD updates on $`Q(s, a)`$ and advantage-weighted policy extraction.
+
+- **Exploration & Data Collection**: Offline dataset generation comparing undirected random exploration against curiosity-driven exploration via Random Network Distillation (RND).
 - **Environments**: `PointMass` (`Easy`, `Medium`, `Hard`)
 - **Experiments**: Evaluated CQL and IQL across hyperparameter settings (CQL $`\alpha`$, IQL expectile $`\tau`$).
 
