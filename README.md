@@ -1,6 +1,6 @@
 # CS224R: Deep Reinforcement Learning
 
-> 本仓库为斯坦福大学 **CS224R: Deep Reinforcement Learning** (Spring 2025) 课程作业的代码实现，涵盖模仿学习、模型预测控制、离线强化学习、目标条件强化学习以及元强化学习的四个编程作业。
+>  **CS224R: Deep Reinforcement Learning** (Spring 2025) 课程作业，包含模仿学习、模型预测控制、离线强化学习、目标条件强化学习以及元强化学习四个编程作业。
 
 ---
 
